@@ -9,10 +9,11 @@ db.on('error', console.error.bind(console, 'connection error: '))
 db.once('open', function(){
     console.log('connected')
 
+
     // create an instance of express
     const app = express()
     const port = 3000
-    // create an event listener to watch the route, with a call back functions
+    // create an event listener to watch the route, with a callback function
     app.get('/kittenPage', function(req, res) {
 
         // create an instance of the object and assign one of the key value pairs to a value. The value is created by entering a query string (?kitten=black). The last part of the name is the actual value
@@ -44,7 +45,15 @@ db.once('open', function(){
     
     // create an object that references the collection and the schema it needs to use
     var Kitten = mongoose.model('tabbies', animalSchema)
-    let SafariAnimal = mongoose.model('zoo animals', animalSchema)
-    let FarmAnimal = mongoose.model('farm animals', animalSchema)
+    const SafariAnimal = require("./models/zoo.model.js")
+    let FarmAnimal = require("./models/farm.model")
+
+    // retrieve data from database
+    db.collection('tabbies').findOne({}, function(err, result){
+        if(err) throw err
+
+        console.log(result.name)
+        db.close()
+    })
 
 })
