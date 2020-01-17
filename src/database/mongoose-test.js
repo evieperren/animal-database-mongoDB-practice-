@@ -1,17 +1,22 @@
 const mongoose = require('mongoose')
 const express = require('express')
+const bodyParser = require('body-parser')
+
 
 // connect to your database (can see what port the container it is running from by kitematic)
-mongoose.connect('mongodb://localhost:27015/animals', {useNewUrlParser: true})
+// mongoose.connect('mongodb://localhost:27015/animals', {useNewUrlParser: true})
 
-var db = mongoose.connection
-db.on('error', console.error.bind(console, 'connection error: '))
+// var db = mongoose.connection
+// db.on('error', console.error.bind(console, 'connection error: '))
 db.once('open', function(){
     console.log('connected')
 
 
     // create an instance of express
     const app = express()
+    // body parser extracts data from the form and add it to the body of the request
+    app.use(bodyParser.urlencoded({extended: true}))
+
     const port = 3000
     // create an event listener to watch the route, with a callback function
     app.get('/kittenPage', function(req, res) {
@@ -29,11 +34,16 @@ db.once('open', function(){
         safari.save()
         res.send(safari)
     })
-
+    
     app.get('/farmAnimals', function(req, res){
         var fourlegs = new FarmAnimal({name: req.query.farm})
         fourlegs.save()
-        res.send(fourlegs)
+        res.sendFile(__dirname + '/index.html')
+    })
+    
+    app.post('/farmAnimals', function(req, res){
+        console.log(req.body)
+        res.send('yay')
     })
     // ensure the instance is listerning to the port defined 
     app.listen(port, () => console.log(`Example app listening on port ${port}!`))
@@ -43,6 +53,17 @@ db.once('open', function(){
         name: String
     })
     
+
+
+
+
+    app.get('/', function(req, res){
+        db.collection('tabbies').find({}, function(err, data){
+            if(err) throw err
+            res.send(data)
+        })
+    })
+
     // create an object that references the collection and the schema it needs to use
     var Kitten = mongoose.model('tabbies', animalSchema)
     const SafariAnimal = require("./models/zoo.model.js")
@@ -55,5 +76,18 @@ db.once('open', function(){
         console.log(result.name)
         db.close()
     })
+
+
+
+    
+    
+
+
+
+
+
+
+
+
 
 })
