@@ -4,10 +4,10 @@ const bodyParser = require('body-parser')
 
 
 // connect to your database (can see what port the container it is running from by kitematic)
-// mongoose.connect('mongodb://localhost:27015/animals', {useNewUrlParser: true})
+mongoose.connect('mongodb://localhost:27015/animals', {useNewUrlParser: true})
 
-// var db = mongoose.connection
-// db.on('error', console.error.bind(console, 'connection error: '))
+var db = mongoose.connection
+db.on('error', console.error.bind(console, 'connection error: '))
 db.once('open', function(){
     console.log('connected')
 

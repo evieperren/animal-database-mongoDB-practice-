@@ -4,4 +4,5 @@ var farmSchema = new mongoose.Schema({
     name: String
 })
 
-module.exports = mongoose.model('farm animals', farmSchema)
+var farmAnimal = mongoose.model('farm animals', farmSchema)
+module.exports = farmAnimal
